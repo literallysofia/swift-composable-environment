@@ -83,53 +83,53 @@ final class ReducerAdditionsTests: XCTestCase {
     store.send(.action) { $0 = .int(2) }
   }
 
-  func testForEachIdentifiedArray() {
-    enum Action {
-      case action
-    }
-
-    class First: ComposableEnvironment {}
-    class Second: ComposableEnvironment {}
-    class Third: ComposableEnvironment {}
-
-    struct Value: Identifiable, Equatable {
-      var id: String
-      var int: Int
-    }
-
-    let thirdReducer = Reducer<IdentifiedArrayOf<Value>, Action, Third> {
-      state, _, environment in
-      for index in state.indices {
-        state.update(.init(id: state[index].id, int: environment.int), at: index)
-      }
-      return .none
-    }
-
-    let secondReducer = Reducer<IdentifiedArrayOf<Value>, Action, Second>.combine(
-      thirdReducer.pullback(state: \.self, action: /.self)
-    )
-
-    let firstReducer = Reducer<IdentifiedArrayOf<Value>, Action, First>.combine(
-      secondReducer.pullback(state: \.self, action: /.self)
-    )
-
-    let store = TestStore(
-      initialState: .init(uniqueElements: [
-        .init(id: "A", int: 0),
-        .init(id: "B", int: 3),
-      ]),
-      reducer: firstReducer,
-      environment: First() // Swift ≥ 5.4 can use .init()
-        .with(\.int, 2)
-    )
-
-    store.send(.action) {
-      $0 = .init(uniqueElements: [
-        .init(id: "A", int: 2),
-        .init(id: "B", int: 2),
-      ])
-    }
-  }
+//  func testForEachIdentifiedArray() {
+//    enum Action {
+//      case action
+//    }
+//
+//    class First: ComposableEnvironment {}
+//    class Second: ComposableEnvironment {}
+//    class Third: ComposableEnvironment {}
+//
+//    struct Value: Identifiable, Equatable {
+//      var id: String
+//      var int: Int
+//    }
+//
+//    let thirdReducer = Reducer<IdentifiedArrayOf<Value>, Action, Third> {
+//      state, _, environment in
+//      for index in state.indices {
+//        state.update(.init(id: state[index].id, int: environment.int), at: index)
+//      }
+//      return .none
+//    }
+//
+//    let secondReducer = Reducer<IdentifiedArrayOf<Value>, Action, Second>.combine(
+//      thirdReducer.pullback(state: \.self, action: /.self)
+//    )
+//
+//    let firstReducer = Reducer<IdentifiedArrayOf<Value>, Action, First>.combine(
+//      secondReducer.pullback(state: \.self, action: /.self)
+//    )
+//
+//    let store = TestStore(
+//      initialState: .init(uniqueElements: [
+//        .init(id: "A", int: 0),
+//        .init(id: "B", int: 3),
+//      ]),
+//      reducer: firstReducer,
+//      environment: First() // Swift ≥ 5.4 can use .init()
+//        .with(\.int, 2)
+//    )
+//
+//    store.send(.action) {
+//      $0 = .init(uniqueElements: [
+//        .init(id: "A", int: 2),
+//        .init(id: "B", int: 2),
+//      ])
+//    }
+//  }
 
   func testForEachDictionary() {
     enum Action {

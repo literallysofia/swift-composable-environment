@@ -80,6 +80,7 @@ public extension Reducer where Environment: ComposableEnvironment {
   ///     generally considered a logic error, as a child reducer cannot process a child action
   ///     for unavailable child state.
   /// - Returns: A reducer that works on `GlobalState`, `GlobalAction`, `GlobalEnvironment`.
+  @available(iOS 13.0, OSX 10.15, tvOS 13.0, watchOS 6.0, *)
   func forEach<GlobalState, GlobalAction, GlobalEnvironment, ID>(
     state toLocalState: WritableKeyPath<GlobalState, IdentifiedArray<ID, State>>,
     action toLocalAction: CasePath<GlobalAction, (ID, Action)>,
